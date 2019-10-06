@@ -1,0 +1,82 @@
+#pragma once
+
+// reference : https://github.com/MurakamiShun/HttpClient
+
+#include <boost/asio.hpp>
+#include <boost/beast.hpp>
+#include <string>
+
+#include "Result.hpp"
+
+
+namespace http {
+    using char_type = char;
+    using string_type = std::basic_string<char_type>;
+
+    using field = boost::beast::http::field;
+    using verb = boost::beast::http::verb;
+    using status = boost::beast::http::status;
+
+    namespace version {
+        static constexpr unsigned int _10 = 10;  // HTTP/1.0
+        static constexpr unsigned int _11 = 11;  // HTTP/1.1
+        static constexpr unsigned int _20 = 11;  // HTTP/2.0
+    }
+
+
+    struct BodyAccesable {
+        virtual string_type& body() & noexcept = 0;
+        virtual const string_type& body() const & noexcept = 0;
+    };
+
+
+    class ConnectionError : public BodyAccesable {
+    public:
+        ConnectionError(const string_type& message);
+
+        string_type& body() & noexcept override;
+        const string_type& body() const & noexcept override;
+
+    private:
+        string_type message_;
+    };
+
+
+    class Response : public BodyAccesable {
+    public:
+        Response();
+        Response(boost::beast::http::response<boost::beast::http::string_body> response);
+
+        status status() const;
+        unsigned int status_code() const;
+
+        string_type& body() & noexcept override;
+        const string_type& body() const & noexcept override;
+
+    private:
+        boost::beast::http::response<boost::beast::http::string_body> response_;
+    };
+
+
+    class Request : public BodyAccesable {
+    public:
+        Request();
+        Request(verb method, const string_type& uri, unsigned int http_version = version::_11);
+
+        Request& set(verb method, const string_type& uri, unsigned int http_version);
+        Request& set(field field_name, const string_type& value);
+        Request& set_uri(const string_type& uri);
+        Request& set_body(const string_type& value);
+
+        string_type& body() & noexcept override;
+        const string_type& body() const & noexcept override;
+
+        [[nodiscard]] Result<Response, ConnectionError> send(const string_type& host, const string_type& port);
+
+    private:
+        boost::beast::http::request<boost::beast::http::string_body> request_;
+    };
+
+
+    using result_type = Result<Response, ConnectionError>;
+}
