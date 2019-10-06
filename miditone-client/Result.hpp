@@ -15,17 +15,17 @@ public:
  
     class BadAccess : public std::exception {
     public:
-        explicit BadAccess(const char* method_name) : method_name_(method_name) {}
+        explicit BadAccess(const char* method_name) {
+            using s = std::string;
+            msg_ = s("Bad Access in `") + s(method_name) + s("' method of `Result' class.\n");
+        }
 
         const char* what() const noexcept override {
-            using s = std::string;
-            auto msg = s("Bad Access in `") + s(method_name_) + s("' method of `Result' class.");
-
-            return msg.c_str();
+            return msg_.c_str();
         }
 
     private:
-        const char* method_name_;
+        std::string msg_;
     };
 
     Result() : is_success_(false), result_(std::nullopt) {}
