@@ -18,7 +18,7 @@ namespace http {
     Response::Response(boost::beast::http::response<boost::beast::http::string_body> response) :
         response_(response) {};
 
-    status Response::status() const {
+    http_status Response::status() const {
         return response_.result();
     }
 

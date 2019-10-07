@@ -15,7 +15,7 @@ namespace http {
 
     using field = boost::beast::http::field;
     using verb = boost::beast::http::verb;
-    using status = boost::beast::http::status;
+    using http_status = boost::beast::http::status;
 
     namespace version {
         static constexpr unsigned int _10 = 10;  // HTTP/1.0
@@ -47,7 +47,7 @@ namespace http {
         Response();
         Response(boost::beast::http::response<boost::beast::http::string_body> response);
 
-        status status() const;
+        http_status status() const;
         unsigned int status_code() const;
 
         string_type& body() & noexcept override;
