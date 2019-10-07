@@ -1,15 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <memory>
 #include <boost/property_tree/ptree.hpp>
 
-#include "Result.hpp"
+#include "HTTPClient.hpp"
 
-namespace http {
-    class Request;
-    class Response;
-}
 
 namespace api_client {
 
@@ -17,31 +13,47 @@ namespace api_client {
     using string_type = std::basic_string<char_type>;
     using int_type = int32_t;
 
-    struct ResponseBase {
-    public:
-        ResponseBase();
-        ResponseBase(const http::Response* response);
+    class MiditoneClient;
 
-        const std::string& raw_body() const noexcept;
-    private:
-        unsigned int status_code_;
-    };
+    namespace response {
 
-    struct connection_configure_t {
-        string_type host, port;
-        string_type method;
-        string_type uri;
-    };
+        struct ResponseBase : public http::Response {
+        public:
+            ResponseBase(http::Response& response);
 
-    struct RequestBase {
-    public:
-        RequestBase();
+        protected:
+            virtual void parse_body() = 0;
+        };
 
-        std::unique_ptr<ResponseBase> send() const noexcept;
+        struct HealthCheck : public ResponseBase {
+        public:
+            HealthCheck(http::Response& response);
+        protected:
+            void parse_body() override;
+        };
+    }
 
-    private:
-        std::unique_ptr<http::Request> request_;
-    };
+
+    namespace request {
+        template<typename S>
+        using result_type = Result<S, http::ConnectionError>; 
+
+        struct RequestBase {
+        public:
+            RequestBase(const MiditoneClient& client);
+
+        protected:
+            const MiditoneClient& client_;
+
+            http::Request create_base_request() const noexcept;
+        };
+
+        struct HealthCheck : public RequestBase {
+            HealthCheck(const MiditoneClient& client);
+            result_type<response::HealthCheck> send() const noexcept;
+        };
+    }
+
 
     struct connection_dest_t {
         string_type host, port;
@@ -49,6 +61,8 @@ namespace api_client {
 
     class MiditoneClient {
     public:
+        static constexpr unsigned int http_version = http::version::_11;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -75,6 +89,7 @@ namespace api_client {
 
         /// <summary>
         /// 接続先情報を取得する
+        /// </summary>
         /// <returns>
         /// 接続先の情報
         /// </returns>
@@ -88,6 +103,17 @@ namespace api_client {
         /// *this
         /// </returns>
         MiditoneClient& token(const string_type& token) noexcept;
+
+        /// <summary>
+        /// APIのトークンを取得する
+        /// </summary>
+        /// <returns>
+        /// APIのトークン
+        /// </returns>
+        const string_type& token() const noexcept;
+
+        
+        request::HealthCheck health_check() const noexcept;
 
     private:
         string_type host_;

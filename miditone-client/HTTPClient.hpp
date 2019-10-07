@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // reference : https://github.com/MurakamiShun/HttpClient
 
@@ -34,7 +34,20 @@ namespace http {
     public:
         ConnectionError(const string_type& message);
 
+        /// <summary>
+        /// レスポンスボディの文字列を返す
+        /// </summary>
+        /// <returns>
+        /// レスポンスボディの文字列
+        /// </returns>
         string_type& body() & noexcept override;
+
+        /// <summary>
+        /// レスポンスボディの文字列を返す
+        /// </summary>
+        /// <returns>
+        /// レスポンスボディの文字列
+        /// </returns>
         const string_type& body() const & noexcept override;
 
     private:
@@ -66,7 +79,8 @@ namespace http {
 
         Request& set(verb method, const string_type& uri, unsigned int http_version);
         Request& set(field field_name, const string_type& value);
-        Request& set_uri(const string_type& uri);
+        Request& set(unsigned int http_version);
+        Request& set(verb method, const string_type& uri);
         Request& set_body(const string_type& value);
 
         string_type& body() & noexcept override;
