@@ -2,6 +2,14 @@
 
 #include <string>
 #include <memory>
+#include <boost/property_tree/ptree.hpp>
+
+#include "Result.hpp"
+
+namespace http {
+    class Request;
+    class Response;
+}
 
 namespace api_client {
 
@@ -9,20 +17,31 @@ namespace api_client {
     using string_type = std::basic_string<char_type>;
     using int_type = int32_t;
 
-    namespace http {
-        class HTTPClient;
-    }
+    struct ResponseBase {
+    public:
+        ResponseBase();
+        ResponseBase(const http::Response* response);
 
+        const std::string& raw_body() const noexcept;
+    private:
+        unsigned int status_code_;
+    };
+
+    struct connection_configure_t {
+        string_type host, port;
+        string_type method;
+        string_type uri;
+    };
 
     struct RequestBase {
     public:
-        RequestBase(std::unique_ptr<http::HTTPClient> client);
+        RequestBase();
 
+        std::unique_ptr<ResponseBase> send() const noexcept;
 
     private:
-        std::unique_ptr<http::HTTPClient> client_;
+        std::unique_ptr<http::Request> request_;
     };
-
 
     struct connection_dest_t {
         string_type host, port;
@@ -69,9 +88,6 @@ namespace api_client {
         /// *this
         /// </returns>
         MiditoneClient& token(const string_type& token) noexcept;
-
-
-        
 
     private:
         string_type host_;

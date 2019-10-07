@@ -1,5 +1,7 @@
 #include "MiditoneClient.hpp"
 
+#include "HTTPClient.hpp"
+
 
 namespace api_client {
 
@@ -21,7 +23,13 @@ namespace api_client {
         token_ = token;
     }
 
-    RequestBase::RequestBase(std::unique_ptr<http::HTTPClient> client) {
+
+    RequestBase::RequestBase(std::unique_ptr<http::Request>&& request) {
+        request_.swap(request);
+    }
+
+    std::unique_ptr<ResponseBase> RequestBase::send() const noexcept {
+        request_->send()
     }
 
 }

@@ -12,10 +12,12 @@ namespace http {
         return message_;
     }
 
-
     Response::Response() {};
 
-    Response::Response(boost::beast::http::response<boost::beast::http::string_body> response) :
+    Response::Response(boost::beast::http::response<boost::beast::http::string_body>& response) :
+        response_(response) {};
+
+    Response::Response(boost::beast::http::response<boost::beast::http::string_body>&& response) :
         response_(response) {};
 
     http_status Response::status() const {

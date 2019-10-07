@@ -45,7 +45,8 @@ namespace http {
     class Response : public BodyAccesable {
     public:
         Response();
-        Response(boost::beast::http::response<boost::beast::http::string_body> response);
+        Response(boost::beast::http::response<boost::beast::http::string_body>& response);
+        Response(boost::beast::http::response<boost::beast::http::string_body>&& response);
 
         http_status status() const;
         unsigned int status_code() const;
