@@ -16,8 +16,9 @@ public:
     class BadAccess : public std::exception {
     public:
         explicit BadAccess(const char* method_name) {
-            using s = std::string;
-            msg_ = s("Bad Access in `") + s(method_name) + s("' method of `Result' class.\n");
+            using namespace std::literals::string_literals;
+
+            msg_ = u8"Bad Access in `"s + method_name + u8"' method of `Result' class.\n";
         }
 
         const char* what() const noexcept override {
@@ -65,56 +66,56 @@ public:
         if (is_success_)
             return std::get<success_type>(result_.value());
         else
-            throw BadAccess("success_value");
+            throw BadAccess(u8"success_value");
     }
 
     const success_type&& success_value() const && {
         if (is_success_)
             return std::move(std::get<success_type>(result_.value()));
         else
-            throw BadAccess("success_value");
+            throw BadAccess(u8"success_value");
     }
 
     success_type& success_value() & {
         if (is_success_)
             return std::get<success_type>(result_.value());
         else
-            throw BadAccess("success_value");
+            throw BadAccess(u8"success_value");
     }
 
     success_type&& success_value() && {
         if (is_success_)
             return std::move(std::get<success_type>(result_.value()));
         else
-            throw BadAccess("success_value");
+            throw BadAccess(u8"success_value");
     }
 
     const failed_type& failed_value() const & {
         if (!is_success_ && result_.has_value())
             return std::get<failed_type>(result_.value());
         else
-            throw BadAccess("failed_value");
+            throw BadAccess(u8"failed_value");
     }
 
     const failed_type&& failed_value() const && {
         if (!is_success_ && result_.has_value())
             return std::move(std::get<failed_type>(result_.value()));
         else
-            throw BadAccess("failed_value");
+            throw BadAccess(u8"failed_value");
     }
 
     failed_type& failed_value() & {
         if (!is_success_ && result_.has_value())
             return std::get<failed_type>(result_.value());
         else
-            throw BadAccess("failed_value");
+            throw BadAccess(u8"failed_value");
     }
 
     failed_type&& failed_value() && {
         if (!is_success_ && result_.has_value())
             return std::move(std::get<failed_type>(result_.value()));
         else
-            throw BadAccess("failed_value");
+            throw BadAccess(u8"failed_value");
     }
 
     success_type success_value_or(success_type&& s) const & noexcept {
