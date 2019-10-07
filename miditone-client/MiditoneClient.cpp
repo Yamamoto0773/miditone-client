@@ -50,7 +50,7 @@ namespace api_client {
 
         HealthCheck::HealthCheck(const MiditoneClient& client)
             : RequestBase(client) {}
-        
+
         result_type<response::HealthCheck> HealthCheck::send() const noexcept {
             auto result =
                 create_base_request()
@@ -63,7 +63,7 @@ namespace api_client {
                 return result_type<response::HealthCheck>(result.failed_value());
         }
     }
-    
+
 
     namespace response {
         HealthCheck::HealthCheck(http::Response& response) : ResponseBase(response) {}

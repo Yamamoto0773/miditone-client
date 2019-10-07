@@ -36,7 +36,7 @@ namespace api_client {
 
     namespace request {
         template<typename S>
-        using result_type = Result<S, http::ConnectionError>; 
+        using result_type = Result<S, http::ConnectionError>;
 
         struct RequestBase {
         public:
@@ -112,7 +112,7 @@ namespace api_client {
         /// </returns>
         const string_type& token() const noexcept;
 
-        
+
         request::HealthCheck health_check() const noexcept;
 
     private:
