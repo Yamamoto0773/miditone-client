@@ -31,12 +31,20 @@ namespace api_client {
         protected:
             void parse_body() override;
         };
+
+        struct User : public ResponseBase {
+        public:
+            User(http::Response& response);
+        protected:
+            void parse_body() override;
+        };
+
     }
 
 
     namespace request {
         template<typename S>
-        using result_type = Result<S, http::ConnectionError>; 
+        using result_type = Result<S, http::ConnectionError>;
 
         struct RequestBase {
         public:
@@ -51,6 +59,22 @@ namespace api_client {
         struct HealthCheck : public RequestBase {
             HealthCheck(const MiditoneClient& client);
             result_type<response::HealthCheck> send() const noexcept;
+        };
+
+        struct User : public RequestBase {
+            User(const MiditoneClient& client);
+
+            /// <summary>
+            /// 取得するユーザのQRコードを指定する
+            /// </summary>
+            /// <param name="qrcode">QRコードの文字列</param>
+            /// <returns>
+            /// *this
+            /// </returns>
+            User& set_qrcode(const string_type& qrcode) noexcept;
+            result_type<response::User> send() const noexcept;
+        private:
+            string_type qrcode_;
         };
     }
 
@@ -112,7 +136,11 @@ namespace api_client {
         /// </returns>
         const string_type& token() const noexcept;
 
-        
+        /// <summary>
+        /// ユーザに対するリクエストを取得する
+        /// </summary>
+        request::User users_request() const noexcept;
+
         request::HealthCheck health_check() const noexcept;
 
     private:
