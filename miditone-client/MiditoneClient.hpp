@@ -53,28 +53,14 @@ namespace api_client {
         struct health_check_t {
             string_type title;
         };
-
-        struct HealthCheck : public ResponseBase<health_check_t> {
-        public:
-            HealthCheck(const http::Response& response, parser::body_parser_t<health_check_t> parser);
-        };
-
+        using HealthCheck = ResponseBase<health_check_t>;
 
         struct user_t {
             string_type name;
             string_type qrcode;
         };
-
-        struct User : public ResponseBase<user_t> {
-        public:
-            User(const http::Response& response, parser::body_parser_t<user_t> parser);
-        };
-
-        struct Users : public ResponseBase<std::vector<user_t>> {
-        public:
-            Users(const http::Response& response, parser::body_parser_t<std::vector<user_t>> parser);
-        };
-
+        using User = ResponseBase<user_t>;
+        using Users = ResponseBase<std::vector<user_t>>;
     }
 
 
@@ -191,8 +177,8 @@ namespace api_client {
         /// ユーザを取得する
         /// </summary>
         /// <param name="qrcode">取得するユーザのQRコード</param>
-        request::User get_user(const string_type& qrcode) const noexcept;
-        request::Users get_users() const noexcept;
+        request::User get_user_request(const string_type& qrcode) const noexcept;
+        request::Users get_users_request() const noexcept;
 
         // request::Users users_request() const noexcept;
 

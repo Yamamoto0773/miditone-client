@@ -33,15 +33,6 @@ namespace api_client {
                 return parsed;
             }
         }
-
-        HealthCheck::HealthCheck(const http::Response& response, parser::body_parser_t<resource_type> parser)
-            : ResponseBase(response, parser) {}
-
-        User::User(const http::Response& response, parser::body_parser_t<user_t> parser)
-            : ResponseBase(response, parser) {}
-
-        Users::Users(const http::Response& response, parser::body_parser_t<std::vector<user_t>> parser)
-            : ResponseBase(response, parser) {}
     }
 
     namespace request {
@@ -148,11 +139,11 @@ namespace api_client {
         return request::HealthCheck(*this, http::verb::get);
     }
 
-    request::User MiditoneClient::get_user(const string_type& qrcode) const noexcept {
+    request::User MiditoneClient::get_user_request(const string_type& qrcode) const noexcept {
         return request::User(*this, http::verb::get).set_qrcode(qrcode);
     }
 
-    request::Users MiditoneClient::get_users() const noexcept {
+    request::Users MiditoneClient::get_users_request() const noexcept {
         return request::Users(*this, http::verb::get);
     }
 
