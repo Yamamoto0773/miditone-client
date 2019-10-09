@@ -1,4 +1,4 @@
-#include "HTTPClient.hpp"
+﻿#include "HTTPClient.hpp"
 
 namespace http {
 
@@ -12,13 +12,15 @@ namespace http {
         return message_;
     }
 
-
     Response::Response() {};
 
-    Response::Response(boost::beast::http::response<boost::beast::http::string_body> response) :
+    Response::Response(boost::beast::http::response<boost::beast::http::string_body>& response) :
         response_(response) {};
 
-    status Response::status() const {
+    Response::Response(boost::beast::http::response<boost::beast::http::string_body>&& response) :
+        response_(response) {};
+
+    http_status Response::status() const {
         return response_.result();
     }
 
@@ -54,7 +56,14 @@ namespace http {
         return *this;
     }
 
-    Request& Request::set_uri(const string_type& uri) {
+    Request& Request::set(unsigned int http_version) {
+        request_.version(http_version);
+
+        return *this;
+    }
+
+    Request& Request::set(verb method, const string_type& uri) {
+        request_.method(method);
         request_.target(uri);
 
         return *this;

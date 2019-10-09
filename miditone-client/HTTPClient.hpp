@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 // reference : https://github.com/MurakamiShun/HttpClient
 
@@ -15,7 +15,7 @@ namespace http {
 
     using field = boost::beast::http::field;
     using verb = boost::beast::http::verb;
-    using status = boost::beast::http::status;
+    using http_status = boost::beast::http::status;
 
     namespace version {
         static constexpr unsigned int _10 = 10;  // HTTP/1.0
@@ -34,7 +34,14 @@ namespace http {
     public:
         ConnectionError(const string_type& message);
 
+        /// <summary>
+        /// 接続エラーのメッセージを返す
+        /// </summary>
         string_type& body() & noexcept override;
+
+        /// <summary>
+        /// 接続エラーのメッセージを返す
+        /// </summary>
         const string_type& body() const & noexcept override;
 
     private:
@@ -45,12 +52,33 @@ namespace http {
     class Response : public BodyAccesable {
     public:
         Response();
-        Response(boost::beast::http::response<boost::beast::http::string_body> response);
+        Response(boost::beast::http::response<boost::beast::http::string_body>& response);
+        Response(boost::beast::http::response<boost::beast::http::string_body>&& response);
 
-        status status() const;
+        /// <summary>
+        /// HTTPレスポンスステータスコードを返す
+        /// </summary>
+        /// <returns>
+        /// ステータスコードを表現するenum class
+        /// </returns>
+        http_status status() const;
+
+        /// <summary>
+        /// HTTPレスポンスステータスコードを返す
+        /// </summary>
+        /// <returns>
+        /// ステータスコードを表す符号なし整数
+        /// </returns>
         unsigned int status_code() const;
 
+        /// <summary>
+        /// レスポンスのボディを返す
+        /// </summary>
         string_type& body() & noexcept override;
+
+        /// <summary>
+        /// レスポンスのボディを返す
+        /// </summary>
         const string_type& body() const & noexcept override;
 
     private:
@@ -65,7 +93,8 @@ namespace http {
 
         Request& set(verb method, const string_type& uri, unsigned int http_version);
         Request& set(field field_name, const string_type& value);
-        Request& set_uri(const string_type& uri);
+        Request& set(unsigned int http_version);
+        Request& set(verb method, const string_type& uri);
         Request& set_body(const string_type& value);
 
         string_type& body() & noexcept override;
