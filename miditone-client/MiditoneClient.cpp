@@ -8,15 +8,18 @@ namespace api_client {
         namespace parser {
             health_check_t health_check_parser(const ptree_type& ptree) {
                 health_check_t parsed;
-                parsed.title     = ptree.get<string_type>("data.attributes.title", "");
+                parsed.title    = ptree.get<string_type>("title", "");
+                parsed.comment  = ptree.get<string_type>("comment", "");
+                parsed.auth     = ptree.get<string_type>("auth", "");
+                parsed.luck     = ptree.get<string_type>("luck", "");
 
                 return parsed;
             }
 
-            user_t user_parser(const ptree_type& ptree) {
+            user_t user_attributes_parser(const ptree_type& ptree, const std::string& path_prefix = "") {
                 user_t parsed;
-                parsed.name     = ptree.get<string_type>("data.attributes.name", "");
-                parsed.qrcode   = ptree.get<string_type>("data.attributes.qrcode", "");
+                parsed.name     = ptree.get<string_type>(path_prefix + "attributes.name", "");
+                parsed.qrcode   = ptree.get<string_type>(path_prefix + "attributes.qrcode", "");
 
                 return parsed;
             }
@@ -25,12 +28,15 @@ namespace api_client {
                 ptree_type empty_tree;
                 std::vector<user_t> parsed;
 
-                for (const auto& child_tree : ptree.get_child("data", empty_tree)) {
-                    const auto& user_attributes = child_tree.second.get_child("attributes");
-                    parsed.push_back(user_parser(user_attributes));
+                for (const auto & child_tree : ptree.get_child("data", empty_tree)) {
+                    parsed.push_back(user_attributes_parser(child_tree.second));
                 }
 
                 return parsed;
+            }
+
+            user_t user_parser(const ptree_type& ptree) {
+                return user_attributes_parser(ptree, "data.");
             }
         }
     }
@@ -135,15 +141,23 @@ namespace api_client {
         return token_;
     }
 
-    request::HealthCheck MiditoneClient::health_check_request() const noexcept {
-        return request::HealthCheck(*this, http::verb::get);
+    request::result_type<response::User> MiditoneClient::get_user(const std::string& qrcode) const noexcept {
+        return request::User(*this, http::verb::get).set_qrcode(qrcode).send();
     }
 
-    request::User MiditoneClient::get_user_request(const string_type& qrcode) const noexcept {
-        return request::User(*this, http::verb::get).set_qrcode(qrcode);
+    request::result_type<response::Users> MiditoneClient::get_users() const noexcept {
+        return request::Users(*this, http::verb::get).send();
     }
 
-    request::Users MiditoneClient::get_users_request() const noexcept {
+    request::result_type<response::HealthCheck> api_client::MiditoneClient::get_health_check() const noexcept {
+        return request::HealthCheck(*this, http::verb::get).send();
+    }
+
+    request::User api_client::MiditoneClient::requst_of_get_user() const noexcept {
+        return request::User(*this, http::verb::get);
+    }
+
+    request::Users api_client::MiditoneClient::request_of_get_users() const noexcept {
         return request::Users(*this, http::verb::get);
     }
 

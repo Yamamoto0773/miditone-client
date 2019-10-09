@@ -35,19 +35,13 @@ namespace http {
         ConnectionError(const string_type& message);
 
         /// <summary>
-        /// レスポンスボディの文字列を返す
+        /// 接続エラーのメッセージを返す
         /// </summary>
-        /// <returns>
-        /// レスポンスボディの文字列
-        /// </returns>
         string_type& body() & noexcept override;
 
         /// <summary>
-        /// レスポンスボディの文字列を返す
+        /// 接続エラーのメッセージを返す
         /// </summary>
-        /// <returns>
-        /// レスポンスボディの文字列
-        /// </returns>
         const string_type& body() const & noexcept override;
 
     private:
@@ -61,10 +55,30 @@ namespace http {
         Response(boost::beast::http::response<boost::beast::http::string_body>& response);
         Response(boost::beast::http::response<boost::beast::http::string_body>&& response);
 
+        /// <summary>
+        /// HTTPレスポンスステータスコードを返す
+        /// </summary>
+        /// <returns>
+        /// ステータスコードを表現するenum class
+        /// </returns>
         http_status status() const;
+
+        /// <summary>
+        /// HTTPレスポンスステータスコードを返す
+        /// </summary>
+        /// <returns>
+        /// ステータスコードを表す符号なし整数
+        /// </returns>
         unsigned int status_code() const;
 
+        /// <summary>
+        /// レスポンスのボディを返す
+        /// </summary>
         string_type& body() & noexcept override;
+
+        /// <summary>
+        /// レスポンスのボディを返す
+        /// </summary>
         const string_type& body() const & noexcept override;
 
     private:

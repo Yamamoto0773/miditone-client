@@ -52,6 +52,9 @@ namespace api_client {
 
         struct health_check_t {
             string_type title;
+            string_type comment;
+            string_type auth;
+            string_type luck;
         };
         using HealthCheck = ResponseBase<health_check_t>;
 
@@ -177,12 +180,21 @@ namespace api_client {
         /// ユーザを取得する
         /// </summary>
         /// <param name="qrcode">取得するユーザのQRコード</param>
-        request::User get_user_request(const string_type& qrcode) const noexcept;
-        request::Users get_users_request() const noexcept;
+        request::result_type<response::User> get_user(const std::string& qrcode) const noexcept;
 
-        // request::Users users_request() const noexcept;
+        /// <summary>
+        /// ユーザの一覧を取得する
+        /// </summary>
+        /// <param name="qrcode">取得するユーザのQRコード</param>
+        request::result_type<response::Users> get_users() const noexcept;
 
-        request::HealthCheck health_check_request() const noexcept;
+        /// <summary>
+        /// サーバーの接続テストをする
+        /// </summary>
+        request::result_type<response::HealthCheck> get_health_check() const noexcept;
+
+        request::User requst_of_get_user() const noexcept;
+        request::Users request_of_get_users() const noexcept;
 
     private:
         string_type host_;
