@@ -12,7 +12,7 @@ public:
     using success_type = S;
     using failed_type = F;
     using variant_type = std::variant<success_type, failed_type>;
- 
+
     class BadAccess : public std::exception {
     public:
         explicit BadAccess(const char* method_name) {
