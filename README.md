@@ -37,9 +37,8 @@ int main() {
         const auto& response = result.success_value();
         std::cout << "     status: " << response.status() << "\n";
         std::cout << "status code: " << response.status_code() << "\n";
-        std::cout << "       body: " << response.body() << "\n";
-        std::cout << "  user.name: " << response.parsed_body().name << "\n";
-        std::cout << "user.qrcode: " << response.parsed_body().qrcode << "\n";
+        std::cout << "  user.name: " << response.parsed_body().user.name << "\n";
+        std::cout << "user.qrcode: " << response.parsed_body().user.qrcode << "\n";
     } else {
         // get error message
         const auto& error = result.failed_value();
@@ -55,7 +54,6 @@ execution result.
 ```
      status: OK
 status code: 200
-       body: {"data":{"id":"5","type":"user","attributes":{"qrcode":"814152626436","name":"user_name"}}}
   user.name: user_name
 user.qrcode: 814152626436
 ```
