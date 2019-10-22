@@ -119,5 +119,22 @@ namespace api_client {
             else
                 return result_type<response::Preference>(result.failed_value());
         }
+
+        UsersScore::UsersScore(const MiditoneClient& client, http::verb method)
+            : RequestBase(client, method) {}
+
+        result_type<response::UsersScore> UsersScore::send() const noexcept {
+            const string_type uri = "/api/users/" + qrcode_ + '/' + platform_ + '/' + "scores";
+
+            auto result =
+                create_base_request(client_.http_version, client_.token())
+                .set(method_, uri)
+                .send(client_.destination().host, client_.destination().port);
+
+            if (result)
+                return result_type<response::UsersScore>(response::UsersScore(result.success_value(), response::parser::users_score_parser));
+            else
+                return result_type<response::UsersScore>(result.failed_value());
+        }
     }
 }

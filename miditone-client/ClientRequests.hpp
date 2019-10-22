@@ -92,5 +92,15 @@ namespace api_client {
 
             string_type params_;
         };
+
+        struct UsersScore : public RequestBase<response::UsersScore> {
+            UsersScore(const MiditoneClient& client, http::verb method);
+
+            result_type<response::UsersScore> send() const noexcept override;
+
+        private:
+            string_type qrcode_;
+            string_type platform_;
+        };
     }
 }

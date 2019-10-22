@@ -73,6 +73,43 @@ namespace api_client {
             preference_attr preference_parser(const ptree_type& ptree) {
                 return preference_attributes_parser(ptree, "data.");
             }
+
+            score_attr score_attributes_parser(const ptree_type& ptree, const string_type& path_prefix = "") {
+                score_attr parsed;
+                parsed.music_id         = get_as_optional<int_type>(ptree, path_prefix + "attributes.music_id");
+                parsed.difficulty       = ptree.get<string_type>(path_prefix + "attributes.music_id", "");
+                parsed.points           = get_as_optional<int_type>(ptree, path_prefix + "attributes.points");
+                parsed.max_combo        = get_as_optional<int_type>(ptree, path_prefix + "attributes.max_combo");
+                parsed.critical_count   = get_as_optional<int_type>(ptree, path_prefix + "attributes.critical_count");
+                parsed.correct_count    = get_as_optional<int_type>(ptree, path_prefix + "attributes.correct_count");
+                parsed.nice_count       = get_as_optional<int_type>(ptree, path_prefix + "attributes.nice_count");
+                parsed.miss_count       = get_as_optional<int_type>(ptree, path_prefix + "attributes.miss_count");
+                parsed.played_times     = get_as_optional<int_type>(ptree, path_prefix + "attributes.played_times");
+                parsed.platform         = ptree.get<string_type>(path_prefix + "attributes.platform", "");
+
+                return parsed;
+            }
+
+            music_attr music_attributes_parser(const ptree_type& ptree, const string_type& path_prefix = "") {
+                music_attr parsed;
+                parsed.title       = ptree.get<string_type>(path_prefix + "attributes.title", "");
+                parsed.artist       = ptree.get<string_type>(path_prefix + "attributes.artist", "");
+
+                return parsed;
+            }
+
+            std::vector<users_score_t> users_score_parser(const ptree_type& ptree) {
+                std::vector<users_score_t> parsed;
+
+                for (const auto & data_tree : ptree.get_child("data", empty_tree)) {
+                    users_score_t us;
+                    us.score = score_attributes_parser(data_tree.second);
+
+                    parsed.emplace_back(us);
+                }
+
+                return parsed;
+            }
         }
     }
 }

@@ -45,6 +45,26 @@ namespace api_client {
             // バランスボード版の設定
             preference_attr board_pref;
         };
+        struct score_attr {
+            std::optional<int_type> music_id;
+            string_type difficulty;
+            std::optional<int_type> points;
+            std::optional<int_type> max_combo;
+            std::optional<int_type> critical_count;
+            std::optional<int_type> correct_count;
+            std::optional<int_type> nice_count;
+            std::optional<int_type> miss_count;
+            std::optional<int_type> played_times;
+            string_type platform;
+        };
+        struct music_attr {
+            string_type title;
+            string_type artist;
+        };
+        struct users_score_t {
+            music_attr music;
+            score_attr score;
+        };
 
 
         // ###################################
@@ -60,7 +80,7 @@ namespace api_client {
             std::vector<user_attr> users_parser(const ptree_type& ptree);
             user_t user_parser(const ptree_type& ptree);
             preference_attr preference_parser(const ptree_type& ptree);
-
+            std::vector<users_score_t> users_score_parser(const ptree_type& ptree);
         }
 
 
@@ -97,5 +117,6 @@ namespace api_client {
         using User = ResponseBase<user_t>;
         using Users = ResponseBase<std::vector<user_attr>>;
         using Preference = ResponseBase<preference_attr>;
+        using UsersScore = ResponseBase<std::vector<users_score_t>>;
     }
 }
