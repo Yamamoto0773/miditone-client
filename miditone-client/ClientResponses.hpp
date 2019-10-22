@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <functional>
@@ -31,10 +31,12 @@ namespace api_client {
         struct preference_attr {
             std::optional<float_type> note_speed;
             std::optional<int_type> se_volume;
-            // `button' or `board'
+            // ゲームバージョン  (`button' or `board')
             string_type platform;
         };
         struct user_attr {
+            // ユーザID
+            int_type id;
             string_type name;
             string_type qrcode;
         };
@@ -46,24 +48,46 @@ namespace api_client {
             preference_attr board_pref;
         };
         struct score_attr {
+            // 曲ID
             std::optional<int_type> music_id;
+            // ユーザID (QRコードではない)
+            std::optional<int_type> user_id;
+            // 難易度
             string_type difficulty;
+            // スコア
             std::optional<int_type> points;
             std::optional<int_type> max_combo;
             std::optional<int_type> critical_count;
             std::optional<int_type> correct_count;
             std::optional<int_type> nice_count;
             std::optional<int_type> miss_count;
+            // プレイ回数
             std::optional<int_type> played_times;
+            // ゲームバージョン  (`button' or `board')
             string_type platform;
         };
         struct music_attr {
+            // 曲ID
+            int_type id;
             string_type title;
             string_type artist;
         };
         struct users_score_t {
             music_attr music;
             score_attr score;
+        };
+        struct musics_score_t {
+            score_attr score;
+            user_attr user;
+        };
+        using ranking_t = std::vector<musics_score_t>;
+        struct played_times_attr {
+            // 曲ID
+            std::optional<int_type> music_id;
+            // プレイ回数
+            std::optional<int_type> times;
+            // ゲームバージョン  (`button' or `board')
+            string_type platform;
         };
 
 
@@ -81,6 +105,9 @@ namespace api_client {
             user_t user_parser(const ptree_type& ptree);
             preference_attr preference_parser(const ptree_type& ptree);
             std::vector<users_score_t> users_score_parser(const ptree_type& ptree);
+            ranking_t ranking_parser(const ptree_type& ptree);
+            played_times_attr played_times_parser(const ptree_type& ptree);
+            std::vector<played_times_attr> played_times_list_parser(const ptree_type& ptree);
         }
 
 
@@ -112,11 +139,14 @@ namespace api_client {
         };
 
 
-        // レスポンスクラスの特殊化
+        // レスポンスクラスの別名宣言
         using HealthCheck = ResponseBase<health_check_attr>;
         using User = ResponseBase<user_t>;
         using Users = ResponseBase<std::vector<user_attr>>;
         using Preference = ResponseBase<preference_attr>;
         using UsersScore = ResponseBase<std::vector<users_score_t>>;
+        using Ranking = ResponseBase<ranking_t>;
+        using PlayedTimes = ResponseBase<played_times_attr>;
+        using PlayedTimesList = ResponseBase<std::vector<played_times_attr>>;
     }
 }

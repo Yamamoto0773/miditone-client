@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ClientResponses.hpp"
 
@@ -94,12 +94,60 @@ namespace api_client {
         };
 
         struct UsersScore : public RequestBase<response::UsersScore> {
-            UsersScore(const MiditoneClient& client, http::verb method);
+            UsersScore(
+                const MiditoneClient& client,
+                http::verb method,
+                const string_type& qrcode,
+                const string_type& platform
+            );
 
             result_type<response::UsersScore> send() const noexcept override;
 
         private:
             string_type qrcode_;
+            string_type platform_;
+        };
+
+        struct Ranking : public RequestBase<response::Ranking> {
+            Ranking(
+                const MiditoneClient& client,
+                http::verb method,
+                int music_id,
+                const string_type& platform
+            );
+
+            result_type<response::Ranking> send() const noexcept override;
+
+        private:
+            int music_id_;
+            string_type platform_;
+        };
+
+        struct PlayedTimes : public RequestBase<response::PlayedTimes> {
+            PlayedTimes(
+                const MiditoneClient& client,
+                http::verb method,
+                int music_id,
+                const string_type& platform
+            );
+
+            result_type<response::PlayedTimes> send() const noexcept override;
+
+        private:
+            int music_id_;
+            string_type platform_;
+        };
+
+        struct PlayedTimesList : public RequestBase<response::PlayedTimesList> {
+            PlayedTimesList(
+                const MiditoneClient& client,
+                http::verb method,
+                const string_type& platform
+            );
+
+            result_type<response::PlayedTimesList> send() const noexcept override;
+
+        private:
             string_type platform_;
         };
     }
