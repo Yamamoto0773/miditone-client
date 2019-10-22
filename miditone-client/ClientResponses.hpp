@@ -8,6 +8,7 @@
 
 #include "HTTPClient.hpp"
 
+
 namespace api_client {
 
     using char_type = http::char_type;
@@ -18,7 +19,9 @@ namespace api_client {
     class MiditoneClient;
 
     namespace response {
+        // ###################################
         // リソース構造体
+        // ###################################
         struct health_check_attr {
             string_type title;
             string_type comment;
@@ -44,7 +47,9 @@ namespace api_client {
         };
 
 
+        // ###################################
         // リソースのパーサー
+        // ###################################
         namespace parser {
             using ptree_type = boost::property_tree::basic_ptree<string_type, string_type>;
 
@@ -54,8 +59,10 @@ namespace api_client {
             health_check_attr health_check_parser(const ptree_type&);
             std::vector<user_attr> users_parser(const ptree_type& ptree);
             user_t user_parser(const ptree_type& ptree);
+            preference_attr preference_parser(const ptree_type& ptree);
 
         }
+
 
         // レスポンスクラス
         // パーサーの呼び出しを行うtemplateクラス
@@ -89,5 +96,6 @@ namespace api_client {
         using HealthCheck = ResponseBase<health_check_attr>;
         using User = ResponseBase<user_t>;
         using Users = ResponseBase<std::vector<user_attr>>;
+        using Preference = ResponseBase<preference_attr>;
     }
 }

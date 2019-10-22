@@ -38,6 +38,26 @@ namespace api_client {
         return request::Users(*this, http::verb::get).send();
     }
 
+    request::result_type<response::Preference> MiditoneClient::put_button_preference(
+        const string_type& qrcode,
+        const std::optional<float>& note_speed,
+        const std::optional<int>& se_volume
+    ) const noexcept {
+        return request::Preference(*this, http::verb::put, qrcode, platform::button)
+               .params(note_speed, se_volume)
+               .send();
+    }
+
+    request::result_type<response::Preference> MiditoneClient::put_board_preference(
+        const string_type& qrcode,
+        const std::optional<float>& note_speed,
+        const std::optional<int>& se_volume
+    ) const noexcept {
+        return request::Preference(*this, http::verb::put, qrcode, platform::board)
+               .params(note_speed, se_volume)
+               .send();
+    }
+
     request::result_type<response::HealthCheck> api_client::MiditoneClient::get_health_check() const noexcept {
         return request::HealthCheck(*this, http::verb::get).send();
     }

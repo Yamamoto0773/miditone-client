@@ -1,6 +1,5 @@
 #include "ClientResponses.hpp"
 
-#include <iostream>
 
 namespace api_client {
     namespace response {
@@ -69,6 +68,10 @@ namespace api_client {
                 }
 
                 return parsed;
+            }
+
+            preference_attr preference_parser(const ptree_type& ptree) {
+                return preference_attributes_parser(ptree, "data.");
             }
         }
     }

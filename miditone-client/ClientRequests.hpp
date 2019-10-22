@@ -8,11 +8,19 @@ namespace api_client {
 
     class MiditoneClient;
 
+
+    namespace platform {
+        static const string_type button = "button";
+        static const string_type board = "board";
+    }
+
+
     namespace request {
         template<typename S>
         using result_type = Result<S, http::ConnectionError>;
 
         http::Request create_base_request(unsigned int http_version, const string_type& token);
+        void write_json(const response::parser::ptree_type& ptree, string_type& str);
 
         // リクエストの基底クラス
         template<typename response_type>
@@ -62,6 +70,27 @@ namespace api_client {
             Users(const MiditoneClient& client, http::verb method);
 
             result_type<response::Users> send() const noexcept override;
+        };
+
+        struct Preference : public RequestBase<response::Preference> {
+            Preference(
+                const MiditoneClient& client,
+                http::verb method,
+                const string_type& qrcode,
+                const string_type& platform
+            );
+
+            Preference& params(
+                const std::optional<float>& note_speed = std::nullopt,
+                const std::optional<int>& se_volume = std::nullopt
+            );
+
+            result_type<response::Preference> send() const noexcept override;
+        private:
+            string_type platform_;
+            string_type qrcode_;
+
+            string_type params_;
         };
     }
 }

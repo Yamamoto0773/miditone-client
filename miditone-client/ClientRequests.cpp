@@ -16,6 +16,14 @@ namespace api_client {
             return base_req;
         }
 
+        void write_json(const response::parser::ptree_type& ptree, string_type& str) {
+            std::basic_stringstream<char_type> sstream;
+            write_json(sstream, ptree, false);
+
+            str = sstream.str();
+            str.pop_back(); // remove '\n'
+        }
+
         HealthCheck::HealthCheck(const MiditoneClient& client, http::verb method)
             : RequestBase(client, method) {}
 
@@ -49,7 +57,7 @@ namespace api_client {
 
             auto result =
                 create_base_request(client_.http_version, client_.token())
-                .set(http::verb::get, uri)
+                .set(method_, uri)
                 .send(client_.destination().host, client_.destination().port);
 
             if (result)
@@ -66,13 +74,50 @@ namespace api_client {
 
             auto result =
                 create_base_request(client_.http_version, client_.token())
-                .set(http::verb::get, uri)
+                .set(method_, uri)
                 .send(client_.destination().host, client_.destination().port);
 
             if (result)
                 return result_type<response::Users>(response::Users(result.success_value(), response::parser::users_parser));
             else
                 return result_type<response::Users>(result.failed_value());
+        }
+
+        Preference::Preference(
+            const MiditoneClient& client,
+            http::verb method,
+            const string_type& qrcode,
+            const string_type& platform
+        ) : qrcode_(qrcode), platform_(platform), RequestBase(client, method) {}
+
+        Preference& Preference::params(
+            const std::optional<float>& note_speed,
+            const std::optional<int>& se_volume
+        ) {
+            response::parser::ptree_type ptree;
+            if (note_speed)
+                ptree.put("preference.note_speed", note_speed.value());
+            if (se_volume)
+                ptree.put("preference.se_volume", se_volume.value());
+
+            write_json(ptree, params_);
+
+            return *this;
+        }
+
+        result_type<response::Preference> Preference::send() const noexcept {
+            const string_type uri = "/api/users/" + qrcode_ + '/' + platform_ + '/' + "preference";
+
+            auto result =
+                create_base_request(client_.http_version, client_.token())
+                .set(method_, uri)
+                .set_body(params_)
+                .send(client_.destination().host, client_.destination().port);
+
+            if (result)
+                return result_type<response::Preference>(response::Preference(result.success_value(), response::parser::preference_parser));
+            else
+                return result_type<response::Preference>(result.failed_value());
         }
     }
 }

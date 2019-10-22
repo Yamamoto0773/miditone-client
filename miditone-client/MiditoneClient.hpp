@@ -71,8 +71,31 @@ namespace api_client {
         /// <summary>
         /// ユーザの一覧を取得する
         /// </summary>
-        /// <param name="qrcode">取得するユーザのQRコード</param>
         request::result_type<response::Users> get_users() const noexcept;
+
+        /// <summary>
+        /// ボタン版の設定を更新する
+        /// </summary>
+        /// <param name="qrcode">対象のユーザのQRコード</param>
+        /// <param name="note_speed">ノートスピード</param>
+        /// <param name="se_volume"">効果音の音量</param>
+        request::result_type<response::Preference> put_button_preference(
+            const string_type& qrcode,
+            const std::optional<float>& note_speed = std::nullopt,
+            const std::optional<int>& se_volume = std::nullopt
+        ) const noexcept;
+
+        /// <summary>
+        /// バランスボード版の設定を更新する
+        /// </summary>
+        /// <param name="qrcode">対象のユーザのQRコード</param>
+        /// <param name="note_speed">ノートスピード</param>
+        /// <param name="se_volume"">効果音の音量</param>
+        request::result_type<response::Preference> put_board_preference(
+            const string_type& qrcode,
+            const std::optional<float>& note_speed = std::nullopt,
+            const std::optional<int>& se_volume = std::nullopt
+        ) const noexcept;
 
         /// <summary>
         /// サーバーの接続テストをする
