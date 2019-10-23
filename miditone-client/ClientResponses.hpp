@@ -120,6 +120,7 @@ namespace api_client {
         public:
             ResponseBase(const http::Response& response, parser::body_parser_t<resource_type> parser)
                 : http::Response(response) {
+                if (200 <= response.status_code() && response.status_code() <= 299) {
                     std::basic_stringstream<char_type> sstream;
                     sstream << response.body();
 
@@ -128,6 +129,7 @@ namespace api_client {
 
                     parsed_body_ = parser(ptree);
                 }
+            }
 
             resource_type& parsed_body() & noexcept { return parsed_body_; }
             resource_type&& parsed_body() && noexcept { return std::move(parsed_body_); }

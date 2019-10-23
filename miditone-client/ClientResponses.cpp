@@ -27,7 +27,7 @@ namespace api_client {
 
             user_attr user_attributes_parser(const ptree_type& ptree, const string_type& path_prefix = "") {
                 user_attr parsed;
-                parsed.id       = std::stoi(ptree.get<string_type>(path_prefix + "id"));
+                parsed.id       = std::stoi(ptree.get<string_type>(path_prefix + "id", ""));
                 parsed.name     = ptree.get<string_type>(path_prefix + "attributes.name", "");
                 parsed.qrcode   = ptree.get<string_type>(path_prefix + "attributes.qrcode", "");
 
@@ -94,7 +94,7 @@ namespace api_client {
 
             music_attr music_attributes_parser(const ptree_type& ptree, const string_type& path_prefix = "") {
                 music_attr parsed;
-                parsed.id       = std::stoi(ptree.get<string_type>(path_prefix + "id"));
+                parsed.id       = std::stoi(ptree.get<string_type>(path_prefix + "id", ""));
                 parsed.title    = ptree.get<string_type>(path_prefix + "attributes.title", "");
                 parsed.artist   = ptree.get<string_type>(path_prefix + "attributes.artist", "");
 
