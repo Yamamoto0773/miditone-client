@@ -89,6 +89,12 @@ namespace api_client {
             // ゲームバージョン  (`button' or `board')
             string_type platform;
         };
+        struct pagination_attr {
+            // 1ページごとのレコード数
+            int_type per_page;
+            // 全体のレコード数
+            int_type total_records;
+        };
 
 
         // ###################################
@@ -134,21 +140,47 @@ namespace api_client {
             resource_type& parsed_body() & noexcept { return parsed_body_; }
             resource_type&& parsed_body() && noexcept { return std::move(parsed_body_); }
             const resource_type& parsed_body() const & noexcept { return parsed_body_; };
-            const resource_type&& parsed_body() const&& noexcept { return std::move(parsed_body_); };
+            const resource_type&& parsed_body() const && noexcept { return std::move(parsed_body_); };
 
         private:
             resource_type parsed_body_;
         };
 
 
+        // コレクション型レスポンスクラス
+        template<typename T>
+        struct CollectionResponseBase : public ResponseBase<std::vector<T>> {
+            using resource_type = std::vector<T>;
+
+        public:
+            CollectionResponseBase(const http::Response& response, parser::body_parser_t<resource_type> parser)
+                : ResponseBase<resource_type>(response, parser) {
+
+                const char_type* per_page = response.header()["Per-Page"].data();
+                const char_type* total = response.header()["Total"].data();
+
+                parsed_header_.per_page = std::stoi(per_page);
+                parsed_header_.total_records = std::stoi(total);
+            }
+
+            pagination_attr& parsed_header() & noexcept { return parsed_header_; }
+            pagination_attr&& parsed_header() && noexcept { return std::move(parsed_header_); }
+            const pagination_attr& parsed_header() const & noexcept { return parsed_header_; }
+            const pagination_attr&& parsed_header() const && noexcept { return std::move(parsed_header_); }
+
+        private:
+            pagination_attr parsed_header_;
+        };
+
+
         // レスポンスクラスの別名宣言
-        using HealthCheck = ResponseBase<health_check_attr>;
-        using User = ResponseBase<user_t>;
-        using Users = ResponseBase<std::vector<user_attr>>;
-        using Preference = ResponseBase<preference_attr>;
-        using UsersScore = ResponseBase<std::vector<users_score_t>>;
-        using Ranking = ResponseBase<ranking_t>;
-        using PlayedTimes = ResponseBase<played_times_attr>;
-        using PlayedTimesList = ResponseBase<std::vector<played_times_attr>>;
+        using HealthCheck       = ResponseBase<health_check_attr>;
+        using User              = ResponseBase<user_t>;
+        using Users             = CollectionResponseBase<user_attr>;
+        using Preference        = ResponseBase<preference_attr>;
+        using UsersScore        = CollectionResponseBase<users_score_t>;
+        using Ranking           = ResponseBase<ranking_t>;
+        using PlayedTimes       = ResponseBase<played_times_attr>;
+        using PlayedTimesList   = CollectionResponseBase<played_times_attr>;
     }
 }
