@@ -7,28 +7,7 @@ namespace api_client {
     MiditoneClient::MiditoneClient() {}
 
     MiditoneClient::MiditoneClient(const string_type& host, const string_type& port, const string_type& token) :
-        host_(host), port_(port), token_(token) {}
-
-    MiditoneClient& MiditoneClient::destination(const string_type& host, const string_type& port) {
-        host_ = host;
-        port_ = port;
-
-        return *this;
-    }
-
-    connection_dest_t MiditoneClient::destination() const noexcept {
-        return { host_, port_ };
-    }
-
-    MiditoneClient& MiditoneClient::token(const string_type& token) noexcept {
-        token_ = token;
-
-        return *this;
-    }
-
-    const string_type& MiditoneClient::token() const noexcept {
-        return token_;
-    }
+        ClientBase(host, port, token) {}
 
     request::result_type<response::User> MiditoneClient::get_user(
         const std::string& qrcode

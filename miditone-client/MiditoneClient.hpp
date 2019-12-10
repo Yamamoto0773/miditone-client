@@ -2,14 +2,10 @@
 
 #include "ClientRequests.hpp"
 #include "ClientResponses.hpp"
-
+#include "ClientBase.hpp"
 
 namespace api_client {
-    struct connection_dest_t {
-        string_type host, port;
-    };
-
-    class MiditoneClient {
+    class MiditoneClient : public ClientBase {
     public:
         static constexpr unsigned int http_version = http::version::_11;
 
@@ -26,41 +22,6 @@ namespace api_client {
         /// <param name="port">接続先のポート番号</param>
         /// <param name="token">APIのトークン</param>
         MiditoneClient(const string_type& host, const string_type& port, const string_type& token);
-
-        /// <summary>
-        /// 接続先情報を登録する
-        /// </summary>
-        /// <param name="host">接続先のホスト名，またはアドレス</param>
-        /// <param name="port">接続先のポート番号</param>
-        /// <returns>
-        /// *this
-        /// </returns>
-        MiditoneClient& destination(const string_type& host, const string_type& port);
-
-        /// <summary>
-        /// 接続先情報を取得する
-        /// </summary>
-        /// <returns>
-        /// 接続先の情報
-        /// </returns>
-        connection_dest_t destination() const noexcept;
-
-        /// <summary>
-        /// APIのトークンを登録する
-        /// </summary>
-        /// <param name="token">APIのトークン</param>
-        /// <returns>
-        /// *this
-        /// </returns>
-        MiditoneClient& token(const string_type& token) noexcept;
-
-        /// <summary>
-        /// APIのトークンを取得する
-        /// </summary>
-        /// <returns>
-        /// APIのトークン
-        /// </returns>
-        const string_type& token() const noexcept;
 
         /// <summary>
         /// ユーザを取得する
@@ -176,8 +137,6 @@ namespace api_client {
         /// </summary>
         request::result_type<response::PlayedTimesList> get_board_played_times(
         ) const noexcept;
-
-
 
         /// <summary>
         /// サーバーの接続テストをする
