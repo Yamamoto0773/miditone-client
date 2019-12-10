@@ -154,22 +154,24 @@ namespace api_client {
 
         public:
             CollectionResponseBase(const http::Response& response, parser::body_parser_t<resource_type> parser)
-                : ResponseBase<resource_type>(response, parser) {
+                : ResponseBase<resource_type>(response, parser), pagination_({ 0, 0 }) {
 
                 const char_type* per_page = response.header()["Per-Page"].data();
                 const char_type* total = response.header()["Total"].data();
 
-                parsed_header_.per_page = std::stoi(per_page);
-                parsed_header_.total_records = std::stoi(total);
+                if (per_page)
+                    pagination_.per_page = std::stoi(per_page);
+                if (total)
+                    pagination_.total_records = std::stoi(total);
             }
 
-            pagination_attr& parsed_header() & noexcept { return parsed_header_; }
-            pagination_attr&& parsed_header() && noexcept { return std::move(parsed_header_); }
-            const pagination_attr& parsed_header() const & noexcept { return parsed_header_; }
-            const pagination_attr&& parsed_header() const && noexcept { return std::move(parsed_header_); }
+            pagination_attr& pagination() & noexcept { return pagination_; }
+            pagination_attr&& pagination() && noexcept { return std::move(pagination_); }
+            const pagination_attr& pagination() const & noexcept { return pagination_; }
+            const pagination_attr&& pagination() const && noexcept { return std::move(pagination_); }
 
         private:
-            pagination_attr parsed_header_;
+            pagination_attr pagination_;
         };
 
 
