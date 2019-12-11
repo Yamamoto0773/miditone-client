@@ -5,6 +5,25 @@
 #include "ClientBase.hpp"
 
 namespace api_client {
+
+    template<typename request_type>
+    class CollectionRequest {
+        using response_type = typename request_type::response_type;
+
+    public:
+        CollectionRequest(request_type&& req) : req_(req) {}
+
+        // ページ番号を指定して送信
+        // params:
+        //   page: ページ番号 (1以上の数)
+        [[nodiscard]] request::result_type<response_type> page(int page_num) {
+            return req_.page(page_num).send();
+        }
+    private:
+        request_type req_;
+    };
+
+
     class MiditoneClient : public ClientBase {
     public:
         static constexpr unsigned int http_version = http::version::_11;
@@ -32,7 +51,8 @@ namespace api_client {
         /// <summary>
         /// ユーザの一覧を取得する
         /// </summary>
-        request::result_type<response::Users> get_users() const noexcept;
+        CollectionRequest<request::Users> get_users(
+        ) const noexcept;
 
         /// <summary>
         /// ボタン版の設定を更新する
@@ -62,7 +82,7 @@ namespace api_client {
         /// ユーザのボタン版のスコアを全て取得する
         /// </summary>
         /// <param name="qrcode">対象のユーザのQRコード</param>
-        request::result_type<response::UsersScore> get_users_button_score(
+        CollectionRequest<request::UsersScore> get_users_button_score(
             const string_type& qrcode
         ) const noexcept;
 
@@ -70,7 +90,7 @@ namespace api_client {
         /// ユーザのバランスボード版のスコアを全て取得する
         /// </summary>
         /// <param name="qrcode">対象のユーザのQRコード</param>
-        request::result_type<response::UsersScore> get_users_board_score(
+        CollectionRequest<request::UsersScore> get_users_board_score(
             const string_type& qrcode
         ) const noexcept;
 
@@ -95,7 +115,7 @@ namespace api_client {
         /// ※ スコアの降順に返します
         /// </summary>
         /// <param name="music_id">対象曲の曲ID</param>
-        request::result_type<response::Ranking> get_button_score_ranking(
+        CollectionRequest<request::Ranking> get_button_score_ranking(
             int music_id
         ) const noexcept;
 
@@ -104,7 +124,7 @@ namespace api_client {
         /// ※ スコアの降順に返します
         /// </summary>
         /// <param name="music_id">対象曲の曲ID</param>
-        request::result_type<response::Ranking> get_board_score_ranking(
+        CollectionRequest<request::Ranking> get_board_score_ranking(
             int music_id
         ) const noexcept;
 
@@ -128,14 +148,14 @@ namespace api_client {
         /// ボタン版の全曲のプレイ回数を取得する
         /// ※ 曲IDの昇順に返します
         /// </summary>
-        request::result_type<response::PlayedTimesList> get_button_played_times(
+        CollectionRequest<request::PlayedTimesList> get_button_played_times(
         ) const noexcept;
 
         /// <summary>
         /// バランスボード版の全曲のプレイ回数を取得する
         /// ※ 曲IDの昇順に返します
         /// </summary>
-        request::result_type<response::PlayedTimesList> get_board_played_times(
+        CollectionRequest<request::PlayedTimesList> get_board_played_times(
         ) const noexcept;
 
         /// <summary>

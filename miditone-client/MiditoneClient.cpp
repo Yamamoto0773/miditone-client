@@ -15,9 +15,9 @@ namespace api_client {
         return request::User(*this, http::verb::get).set_qrcode(qrcode).send();
     }
 
-    request::result_type<response::Users> MiditoneClient::get_users(
+    CollectionRequest<request::Users> MiditoneClient::get_users(
     ) const noexcept {
-        return request::Users(*this, http::verb::get).send();
+        return CollectionRequest(request::Users(*this, http::verb::get));
     }
 
     request::result_type<response::Preference> MiditoneClient::put_button_preference(
@@ -40,19 +40,19 @@ namespace api_client {
                .send();
     }
 
-    request::result_type<response::UsersScore> MiditoneClient::get_users_button_score(
+    CollectionRequest<request::UsersScore> MiditoneClient::get_users_button_score(
         const string_type& qrcode
     ) const noexcept {
-        return request::UsersScore(*this, http::verb::get, qrcode, platform::button).send();
+        return CollectionRequest(request::UsersScore(*this, http::verb::get, qrcode, platform::button));
     }
 
-    request::result_type<response::UsersScore> MiditoneClient::get_users_board_score(
+    CollectionRequest<request::UsersScore> MiditoneClient::get_users_board_score(
         const string_type& qrcode
     ) const noexcept {
-        return request::UsersScore(*this, http::verb::get, qrcode, platform::board).send();
+        return CollectionRequest(request::UsersScore(*this, http::verb::get, qrcode, platform::board));
     }
 
-	request::result_type<response::UsersScore> MiditoneClient::put_users_button_score(
+	request::result_type<response::UsersScore>  MiditoneClient::put_users_button_score(
         const string_type& qrcode,
         const request::new_record_params& params
     ) const noexcept {
@@ -66,16 +66,16 @@ namespace api_client {
         return request::NewRecord(*this, http::verb::put, qrcode, platform::board).params(params).send();
     }
 
-    request::result_type<response::Ranking> MiditoneClient::get_button_score_ranking(
+    CollectionRequest<request::Ranking> MiditoneClient::get_button_score_ranking(
         int music_id
     ) const noexcept {
-        return request::Ranking(*this, http::verb::get, music_id, platform::button).send();
+        return CollectionRequest(request::Ranking(*this, http::verb::get, music_id, platform::button));
     }
 
-    request::result_type<response::Ranking> MiditoneClient::get_board_score_ranking(
+    CollectionRequest<request::Ranking> MiditoneClient::get_board_score_ranking(
         int music_id
     ) const noexcept {
-        return request::Ranking(*this, http::verb::get, music_id, platform::board).send();
+        return CollectionRequest(request::Ranking(*this, http::verb::get, music_id, platform::board));
     }
 
     request::result_type<response::PlayedTimes> MiditoneClient::get_button_played_times(
@@ -90,14 +90,14 @@ namespace api_client {
         return request::PlayedTimes(*this, http::verb::get, music_id, platform::board).send();
     }
 
-    request::result_type<response::PlayedTimesList> MiditoneClient::get_button_played_times(
+    CollectionRequest<request::PlayedTimesList> MiditoneClient::get_button_played_times(
     ) const noexcept {
-        return request::PlayedTimesList(*this, http::verb::get, platform::button).send();
+        return CollectionRequest(request::PlayedTimesList(*this, http::verb::get, platform::button));
     }
 
-    request::result_type<response::PlayedTimesList> MiditoneClient::get_board_played_times(
+    CollectionRequest<request::PlayedTimesList> MiditoneClient::get_board_played_times(
     ) const noexcept {
-        return request::PlayedTimesList(*this, http::verb::get, platform::board).send();
+        return CollectionRequest(request::PlayedTimesList(*this, http::verb::get, platform::board));
     }
 
     request::result_type<response::HealthCheck> api_client::MiditoneClient::get_health_check(
