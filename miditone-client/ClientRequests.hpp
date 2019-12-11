@@ -1,12 +1,11 @@
 ﻿#pragma once
 
 #include "ClientResponses.hpp"
+#include "ClientBase.hpp"
 
 namespace api_client {
     using char_type = http::char_type;
     using string_type = http::string_type;
-
-    class MiditoneClient;
 
 
     namespace platform {
@@ -29,34 +28,55 @@ namespace api_client {
         void write_json(const response::parser::ptree_type& ptree, string_type& str);
 
         // リクエストの基底クラス
-        template<typename response_type>
+        template<typename T>
         struct RequestBase {
+            using response_type = T;
         public:
-            RequestBase(const MiditoneClient& client, http::verb method)
+            RequestBase(const ClientBase& client, http::verb method)
                 : client_(client), method_(method) {};
 
-            virtual result_type<response_type> send() const noexcept {
-                return result_type<response_type>();
+            virtual result_type<response_type> send() const noexcept = 0;
+
+            RequestBase& page(int page_num) noexcept {
+                url_parameter_ += "page=" + std::to_string(page_num);
+
+                return *this;
             }
 
         protected:
-            const MiditoneClient& client_;
-            http::verb method_;
-        };
+            result_type<response_type> send_helper(string_type uri, response::parser::body_parser_t<typename response_type::resource_type> parser) const noexcept {
+                if (!url_parameter_.empty()) {
+                    uri += "?" + url_parameter_;
+                }
 
+                const auto result =
+                    create_base_request(client_.http_version, client_.token())
+                    .set(method_, uri)
+                    .send(client_.destination().host, client_.destination().port);
+
+                if (result)
+                    return result_type<response_type>(response_type(result.success_value(), parser));
+                else
+                    return result_type<response_type>(result.failed_value());
+            }
+
+            const ClientBase& client_;
+            http::verb method_;
+            string_type url_parameter_;
+        };
 
         // --------------------------------------------------
         // リクエストクラスの実装
         // --------------------------------------------------
 
         struct HealthCheck : public RequestBase<response::HealthCheck> {
-            HealthCheck(const MiditoneClient& client, http::verb method);
+            HealthCheck(const ClientBase& client, http::verb method);
 
             result_type<response::HealthCheck> send() const noexcept override;
         };
 
         struct User : public RequestBase<response::User> {
-            User(const MiditoneClient& client, http::verb method);
+            User(const ClientBase& client, http::verb method);
 
             /// <summary>
             /// URIにQRコードを指定する
@@ -73,14 +93,14 @@ namespace api_client {
         };
 
         struct Users : public RequestBase<response::Users> {
-            Users(const MiditoneClient& client, http::verb method);
+            Users(const ClientBase& client, http::verb method);
 
             result_type<response::Users> send() const noexcept override;
         };
 
         struct Preference : public RequestBase<response::Preference> {
             Preference(
-                const MiditoneClient& client,
+                const ClientBase& client,
                 http::verb method,
                 const string_type& qrcode,
                 const string_type& platform
@@ -93,15 +113,15 @@ namespace api_client {
 
             result_type<response::Preference> send() const noexcept override;
         private:
-            string_type platform_;
             string_type qrcode_;
+            string_type platform_;
 
             string_type params_;
         };
 
         struct UsersScore : public RequestBase<response::UsersScore> {
             UsersScore(
-                const MiditoneClient& client,
+                const ClientBase& client,
                 http::verb method,
                 const string_type& qrcode,
                 const string_type& platform
@@ -127,7 +147,7 @@ namespace api_client {
 
         struct NewRecord : public RequestBase<response::UsersScore> {
             NewRecord(
-                const MiditoneClient& client,
+                const ClientBase& client,
                 http::verb method,
                 const string_type& qrcode,
                 const string_type& platform
@@ -147,7 +167,7 @@ namespace api_client {
 
         struct Ranking : public RequestBase<response::Ranking> {
             Ranking(
-                const MiditoneClient& client,
+                const ClientBase& client,
                 http::verb method,
                 int music_id,
                 const string_type& platform
@@ -162,7 +182,7 @@ namespace api_client {
 
         struct PlayedTimes : public RequestBase<response::PlayedTimes> {
             PlayedTimes(
-                const MiditoneClient& client,
+                const ClientBase& client,
                 http::verb method,
                 int music_id,
                 const string_type& platform
@@ -177,7 +197,7 @@ namespace api_client {
 
         struct PlayedTimesList : public RequestBase<response::PlayedTimesList> {
             PlayedTimesList(
-                const MiditoneClient& client,
+                const ClientBase& client,
                 http::verb method,
                 const string_type& platform
             );
