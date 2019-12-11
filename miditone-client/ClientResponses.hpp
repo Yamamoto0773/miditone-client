@@ -94,6 +94,8 @@ namespace api_client {
             int_type per_page;
             // 全体のレコード数
             int_type total_records;
+            // 全体のページ数
+            int_type total_pages;
         };
 
 
@@ -154,7 +156,7 @@ namespace api_client {
 
         public:
             CollectionResponseBase(const http::Response& response, parser::body_parser_t<resource_type> parser)
-                : ResponseBase<resource_type>(response, parser), pagination_({ 0, 0 }) {
+                : ResponseBase<resource_type>(response, parser), pagination_({ 0, 0, 0 }) {
 
                 const char_type* per_page = response.header()["Per-Page"].data();
                 const char_type* total = response.header()["Total"].data();
@@ -163,6 +165,8 @@ namespace api_client {
                     pagination_.per_page = std::stoi(per_page);
                 if (total)
                     pagination_.total_records = std::stoi(total);
+                if (pagination_.per_page != 0)
+                    pagination_.total_pages = std::ceil((float_type)pagination_.total_records / pagination_.per_page);
             }
 
             pagination_attr& pagination() & noexcept { return pagination_; }
