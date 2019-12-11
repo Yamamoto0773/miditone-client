@@ -113,8 +113,8 @@ namespace api_client {
 
             result_type<response::Preference> send() const noexcept override;
         private:
-            string_type platform_;
             string_type qrcode_;
+            string_type platform_;
 
             string_type params_;
         };

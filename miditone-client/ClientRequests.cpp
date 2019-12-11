@@ -80,7 +80,7 @@ namespace api_client {
             http::verb method,
             const string_type& qrcode,
             const string_type& platform
-        ) : qrcode_(qrcode), platform_(platform), RequestBase(client, method) {}
+        ) : RequestBase(client, method), qrcode_(qrcode), platform_(platform) {}
 
         Preference& Preference::params(
             const std::optional<float>& note_speed,
@@ -112,7 +112,7 @@ namespace api_client {
             http::verb method,
             const string_type& qrcode,
             const string_type& platform
-        ) : qrcode_(qrcode), platform_(platform), RequestBase(client, method) {}
+        ) : RequestBase(client, method), qrcode_(qrcode), platform_(platform) {}
 
         result_type<response::UsersScore> UsersScore::send() const noexcept {
             const string_type uri = "/api/users/" + qrcode_ + '/' + platform_ + '/' + "scores";
@@ -129,7 +129,7 @@ namespace api_client {
             http::verb method,
             const string_type& qrcode,
             const string_type& platform
-        ) : qrcode_(qrcode), platform_(platform), RequestBase(client, method) {}
+        ) : RequestBase(client, method), qrcode_(qrcode), platform_(platform) {}
 
         NewRecord& NewRecord::params(
             const new_record_params& req_params
@@ -165,7 +165,7 @@ namespace api_client {
             http::verb method,
             int music_id,
             const string_type& platform
-        ) : music_id_(music_id), platform_(platform), RequestBase(client, method) {}
+        ) : RequestBase(client, method), music_id_(music_id), platform_(platform) {}
 
         result_type<response::Ranking> Ranking::send() const noexcept {
             const string_type uri = "/api/musics/" + std::to_string(music_id_) + '/' + platform_ + '/' + "ranking";
@@ -182,7 +182,7 @@ namespace api_client {
             http::verb method,
             int music_id,
             const string_type& platform
-        ) : music_id_(music_id), platform_(platform), RequestBase(client, method) {}
+        ) : RequestBase(client, method), music_id_(music_id), platform_(platform) {}
 
         result_type<response::PlayedTimes> PlayedTimes::send() const noexcept {
             const string_type uri = "/api/musics/" + std::to_string(music_id_) + '/' + platform_ + '/' + "played_times";
@@ -198,7 +198,7 @@ namespace api_client {
             const ClientBase& client,
             http::verb method,
             const string_type& platform
-        ) : platform_(platform), RequestBase(client, method) {}
+        ) : RequestBase(client, method), platform_(platform) {}
 
         result_type<response::PlayedTimesList> PlayedTimesList::send() const noexcept {
             const string_type uri = "/api/musics/" + platform_ + '/' + "played_times";
