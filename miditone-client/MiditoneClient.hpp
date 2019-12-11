@@ -13,11 +13,40 @@ namespace api_client {
     public:
         CollectionRequest(request_type&& req) : req_(req) {}
 
+        // 最初のページを取得
+        [[nodiscard]] request::result_type<response_type> first() {
+            return page(1);
+        }
+
         // ページ番号を指定して送信
         // params:
         //   page: ページ番号 (1以上の数)
         [[nodiscard]] request::result_type<response_type> page(int page_num) {
             return req_.page(page_num).send();
+        }
+
+        // 全ページを一括で取得
+        [[nodiscard]] request::result_type<response_type> all() {
+            auto first_result = first();
+            if (!first_result)
+                return first_result;
+
+            auto& response = first_result.success_value();
+            const int total_pages = response.pagination().total_pages;
+            auto& collection = response.parsed_body();
+
+            collection.reserve(response.pagination().total_records);
+
+            for (int page_num = 2; page_num <= total_pages; page_num++) {
+                auto r = page(page_num);
+                if (!r)
+                    break;
+
+                const auto& body = r.success_value().parsed_body();
+                collection.insert(collection.end(), body.cbegin(), body.cend());
+            }
+
+            return first_result;
         }
     private:
         request_type req_;

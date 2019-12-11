@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <map>
+
 #include "ClientResponses.hpp"
 #include "ClientBase.hpp"
 
@@ -38,7 +40,7 @@ namespace api_client {
             virtual result_type<response_type> send() const noexcept = 0;
 
             RequestBase& page(int page_num) noexcept {
-                url_parameter_ += "page=" + std::to_string(page_num);
+                url_parameter_.insert_or_assign("page", std::to_string(page_num));
 
                 return *this;
             }
@@ -46,7 +48,11 @@ namespace api_client {
         protected:
             result_type<response_type> send_helper(string_type uri, response::parser::body_parser_t<typename response_type::resource_type> parser) const noexcept {
                 if (!url_parameter_.empty()) {
-                    uri += "?" + url_parameter_;
+                    uri += "?";
+                    for (const auto& param : url_parameter_) {
+                        uri += param.first + "=" + param.second + "&";
+                    }
+                    uri.pop_back();
                 }
 
                 const auto result =
@@ -62,7 +68,7 @@ namespace api_client {
 
             const ClientBase& client_;
             http::verb method_;
-            string_type url_parameter_;
+            std::map<string_type, string_type> url_parameter_;
         };
 
         // --------------------------------------------------
