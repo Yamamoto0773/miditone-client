@@ -66,6 +66,17 @@ namespace api_client {
         return request::NewRecord(*this, http::verb::put, qrcode, platform::board).params(params).send();
     }
 
+    CollectionRequest<request::Musics> MiditoneClient::get_musics(
+    ) const noexcept {
+        return CollectionRequest(request::Musics(*this, http::verb::get));
+    }
+
+    request::result_type<response::Music> MiditoneClient::get_music(
+        int id
+    ) const noexcept {
+        return request::Music(*this, http::verb::get).set_id(id).send();
+    }
+
     CollectionRequest<request::Ranking> MiditoneClient::get_button_score_ranking(
         int music_id
     ) const noexcept {

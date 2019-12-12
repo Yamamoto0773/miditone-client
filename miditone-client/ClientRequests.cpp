@@ -205,5 +205,41 @@ namespace api_client {
 
             return send_helper(uri, response::parser::played_times_list_parser);
         }
+
+
+        // ############################################
+        // Music
+        // ############################################
+        Music::Music(
+            const ClientBase& client,
+            http::verb method
+        ) : RequestBase(client, method) {}
+
+        Music& Music::set_id(int id) noexcept {
+            id_ = id;
+
+            return *this;
+        }
+
+        result_type<response::Music> Music::send() const noexcept {
+            const string_type uri = "/api/musics/" + std::to_string(id_);
+
+            return send_helper(uri, response::parser::music_parser);
+        }
+
+
+        // ############################################
+        // Musics
+        // ############################################
+        Musics::Musics(
+            const ClientBase& client,
+            http::verb method
+        ) : RequestBase(client, method) {}
+
+        result_type<response::Musics> Musics::send() const noexcept {
+            const string_type uri = "/api/musics/";
+
+            return send_helper(uri, response::parser::musics_parser);
+        }
     }
 }

@@ -140,6 +140,20 @@ namespace api_client {
         ) const noexcept;
 
         /// <summary>
+        /// 曲をすべて取得する
+        /// </summary>
+        CollectionRequest<request::Musics> get_musics(
+        ) const noexcept;
+
+        /// <summary>
+        /// 曲を1つ取得する
+        /// </summary>
+        /// <param name="id">取得する曲ID</param>
+        request::result_type<response::Music> get_music(
+            int id
+        ) const noexcept;
+
+        /// <summary>
         /// ボタン版のスコアランキングを取得する
         /// ※ スコアの降順に返します
         /// </summary>
