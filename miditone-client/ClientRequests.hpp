@@ -213,5 +213,29 @@ namespace api_client {
         private:
             string_type platform_;
         };
+
+        struct Music : public RequestBase<response::Music> {
+            Music(
+                const ClientBase& client,
+                http::verb method
+            );
+
+            Music& set_id(int id) noexcept;
+
+            result_type<response::Music> send() const noexcept override;
+
+        private:
+            int id_;
+        };
+
+        struct Musics : public RequestBase<response::Musics> {
+            Musics(
+                const ClientBase& client,
+                http::verb method
+            );
+
+            result_type<response::Musics> send() const noexcept override;
+        };
+
     }
 }

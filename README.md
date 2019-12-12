@@ -81,12 +81,12 @@ user.qrcode: 814152626436
 |`/api/users/{qrcode}/{platform}/preference`        |`GET`    |get user's preference|✅|
 |`/api/users/{qrcode}/{platform}/preference`        |`PUT`    |update user's preference|✅|
 |`/api/users/{qrcode}/{platform}/scores`            |`GET`    |get user's scores|✅
-|`/api/users/{qrcode}/{platform}/scores/{id}`       |`GET`    |get a score specified by record id|✅|
+|`/api/users/{qrcode}/{platform}/scores/{id}`       |`GET`    |get a score specified by record id||
 |`/api/users/{qrcode}/{platform}/scores/new_record` |`PUT`    |create or update user's score|✅|
 |`/api/users/{qrcode}/{platform}/scores/{id}`       |`DELETE` |destroy a score specified by record id||
-|`/api/musics`                                      |`GET`    |get musics|
+|`/api/musics`                                      |`GET`    |get musics|✅|
 |`/api/musics`                                      |`POST`   |create a music|
-|`/api/musics/{id}`                                 |`GET`    |get a music specified by music ID||
+|`/api/musics/{id}`                                 |`GET`    |get a music specified by music ID|✅|
 |`/api/musics/{id}`                                 |`PUT`    |update a music specified by music ID||
 |`/api/musics/{id}`                                 |`DELETE` |destroy a music specified by music ID||
 |`/api/musics/{id}/{platform}/ranking`              |`GET`    |get all user's scores of specified music|✅|
