@@ -62,6 +62,17 @@ namespace api_client {
         return CollectionRequest(req);
     }
 
+    CollectionRequest<request::UsersScore> MiditoneClient::get_users_score(
+        const string_type& qrcode,
+        const string_type& diff
+    ) const noexcept {
+        auto req = request::UsersScore(*this, http::verb::get, qrcode);
+        if (!diff.empty()) {
+            req.difficulty(diff);
+        }
+        return CollectionRequest(req);
+    }
+
 	request::result_type<response::UsersScore>  MiditoneClient::put_users_button_score(
         const string_type& qrcode,
         const request::new_record_params& params

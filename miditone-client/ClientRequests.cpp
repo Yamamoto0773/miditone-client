@@ -1,6 +1,8 @@
 ﻿#include "ClientRequests.hpp"
 #include "ClientResponses.hpp"
 
+#include <iostream>
+
 namespace api_client {
     namespace request {
         // ############################################
@@ -121,7 +123,15 @@ namespace api_client {
         }
 
         result_type<response::UsersScore> UsersScore::send() const noexcept {
-            const string_type uri = "/api/users/" + qrcode_ + '/' + platform_ + '/' + "scores";
+            string_type uri = "/api/users/" + qrcode_;
+            if (!platform_.empty()) {
+                uri += '/' + platform_;
+            }
+            uri += '/' + "scores";
+
+            std::cout << qrcode_ << "\n";
+            std::cout << platform_ << "\n";
+            std::cout << uri;
 
             return send_helper(uri, response::parser::users_score_parser);
         }

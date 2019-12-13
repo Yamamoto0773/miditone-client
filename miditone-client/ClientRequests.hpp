@@ -150,7 +150,7 @@ namespace api_client {
                 const ClientBase& client,
                 http::verb method,
                 const string_type& qrcode,
-                const string_type& platform
+                const string_type& platform = ""
             );
 
             UsersScore& difficulty(const string_type& diff);
