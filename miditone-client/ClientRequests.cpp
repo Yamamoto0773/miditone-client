@@ -1,7 +1,6 @@
 ﻿#include "ClientRequests.hpp"
 #include "ClientResponses.hpp"
 
-#include <iostream>
 
 namespace api_client {
     namespace request {
@@ -127,11 +126,7 @@ namespace api_client {
             if (!platform_.empty()) {
                 uri += '/' + platform_;
             }
-            uri += '/' + "scores";
-
-            std::cout << qrcode_ << "\n";
-            std::cout << platform_ << "\n";
-            std::cout << uri;
+            uri += std::string("/") + std::string("scores");
 
             return send_helper(uri, response::parser::users_score_parser);
         }
