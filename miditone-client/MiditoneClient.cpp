@@ -41,15 +41,25 @@ namespace api_client {
     }
 
     CollectionRequest<request::UsersScore> MiditoneClient::get_users_button_score(
-        const string_type& qrcode
+        const string_type& qrcode,
+        const string_type& diff
     ) const noexcept {
-        return CollectionRequest(request::UsersScore(*this, http::verb::get, qrcode, platform::button));
+        auto req = request::UsersScore(*this, http::verb::get, qrcode, platform::button);
+        if (!diff.empty()) {
+            req.difficulty(diff);
+        }
+        return CollectionRequest(req);
     }
 
     CollectionRequest<request::UsersScore> MiditoneClient::get_users_board_score(
-        const string_type& qrcode
+        const string_type& qrcode,
+        const string_type& diff
     ) const noexcept {
-        return CollectionRequest(request::UsersScore(*this, http::verb::get, qrcode, platform::board));
+        auto req = request::UsersScore(*this, http::verb::get, qrcode, platform::board);
+        if (!diff.empty()) {
+            req.difficulty(diff);
+        }
+        return CollectionRequest(req);
     }
 
 	request::result_type<response::UsersScore>  MiditoneClient::put_users_button_score(
@@ -78,15 +88,27 @@ namespace api_client {
     }
 
     CollectionRequest<request::Ranking> MiditoneClient::get_button_score_ranking(
-        int music_id
+        int music_id,
+        const string_type& diff
     ) const noexcept {
-        return CollectionRequest(request::Ranking(*this, http::verb::get, music_id, platform::button));
+        auto req = request::Ranking(*this, http::verb::get, music_id, platform::button);
+        if (!diff.empty()) {
+            req.difficulty(diff);
+        }
+
+        return CollectionRequest(req);
     }
 
     CollectionRequest<request::Ranking> MiditoneClient::get_board_score_ranking(
-        int music_id
+        int music_id,
+        const string_type& diff
     ) const noexcept {
-        return CollectionRequest(request::Ranking(*this, http::verb::get, music_id, platform::board));
+        auto req = request::Ranking(*this, http::verb::get, music_id, platform::board);
+        if (!diff.empty()) {
+            req.difficulty(diff);
+        }
+
+        return CollectionRequest(req);
     }
 
     request::result_type<response::PlayedTimes> MiditoneClient::get_button_played_times(
