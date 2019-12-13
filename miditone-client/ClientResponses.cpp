@@ -27,9 +27,11 @@ namespace api_client {
 
             user_attr user_attributes_parser(const ptree_type& ptree, const string_type& path_prefix = "") {
                 user_attr parsed;
-                parsed.id       = std::stoi(ptree.get<string_type>(path_prefix + "id", ""));
-                parsed.name     = ptree.get<string_type>(path_prefix + "attributes.name", "");
-                parsed.qrcode   = ptree.get<string_type>(path_prefix + "attributes.qrcode", "");
+                parsed.id                   = std::stoi(ptree.get<string_type>(path_prefix + "id", ""));
+                parsed.name                 = ptree.get<string_type>(path_prefix + "attributes.name", "");
+                parsed.qrcode               = ptree.get<string_type>(path_prefix + "attributes.qrcode", "");
+                parsed.button_total_score   = ptree.get<int_type>(path_prefix + "attributes.button_total_score", 0);
+                parsed.board_total_score    = ptree.get<int_type>(path_prefix + "attributes.board_total_score", 0);
 
                 return parsed;
             }
@@ -88,6 +90,8 @@ namespace api_client {
                 parsed.miss_count       = get_as_optional<int_type>(ptree, path_prefix + "attributes.miss_count");
                 parsed.played_times     = get_as_optional<int_type>(ptree, path_prefix + "attributes.played_times");
                 parsed.platform         = ptree.get<string_type>(path_prefix + "attributes.platform", "");
+                parsed.created_at       = ptree.get<string_type>(path_prefix + "attributes.created_at", "");
+                parsed.updated_at       = ptree.get<string_type>(path_prefix + "attributes.updated_at", "");
 
                 return parsed;
             }

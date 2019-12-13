@@ -126,6 +126,12 @@ namespace api_client {
             const string_type& diff = ""
         ) const noexcept;
 
+        /// ユーザのスコアを全て取得する
+        CollectionRequest<request::UsersScore> get_users_score(
+            const string_type& qrcode,
+            const string_type& diff = ""
+        ) const noexcept;
+
         /// <summary>
         /// ユーザのボタン版のスコアを更新する
         /// </summary>

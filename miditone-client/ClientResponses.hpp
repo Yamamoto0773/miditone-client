@@ -39,6 +39,8 @@ namespace api_client {
             int_type id;
             string_type name;
             string_type qrcode;
+            int_type button_total_score;
+            int_type board_total_score;
         };
         struct user_t {
             user_attr user;
@@ -65,6 +67,10 @@ namespace api_client {
             std::optional<int_type> played_times;
             // ゲームバージョン  (`button' or `board')
             string_type platform;
+            // 作成日時
+            string_type created_at;
+            // 更新日時
+            string_type updated_at;
         };
         struct music_attr {
             // 曲ID
